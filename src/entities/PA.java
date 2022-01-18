@@ -1,8 +1,6 @@
 package entities;
 
-public class PA {
-	private Double a1;
-	private Double razao;
+public class PA extends Sequencia {
 
 	public PA() {
 	}
@@ -20,22 +18,19 @@ public class PA {
 	}
 
 	@Override
-	public String toString() {
-		return "a1 = " + a1 + ", razao= " + razao;
-	}
-
 	public double An(int pos) {
 		return a1 + (pos - 1) * razao;
 	}
 
+	@Override
 	public double soma(int quant) {
 		return (a1 + An(quant)) * quant / 2;
 	}
 
+	@Override
 	public double soma(int posInicial, int posFinal) {
 		int n = posFinal - posInicial + 1;
 		double soma = (An(posInicial) + An(posFinal)) * n / 2;
 		return soma;
 	}
-
 }
