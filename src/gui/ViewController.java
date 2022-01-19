@@ -64,6 +64,9 @@ public class ViewController implements Initializable {
 	private TextField txtV3;
 
 	@FXML
+	private TextField txtQuant;
+
+	@FXML
 	private RadioButton rbElementoRazao;
 
 	@FXML
@@ -80,6 +83,7 @@ public class ViewController implements Initializable {
 
 		cbProgressao.getItems().addAll(tipo);
 		cbProgressao.setOnAction(this::getTipo);
+		cbProgressao.getSelectionModel().select(0);// escolhe a seleção padrão do combo box
 	}
 
 	public void getTipo(ActionEvent event) {
@@ -108,7 +112,7 @@ public class ViewController implements Initializable {
 	@FXML
 	public void btCalculaAction() {
 		txtLista.clear();
-		Locale.setDefault(Locale.US);// para usar ponto decimal
+		Locale.setDefault(Locale.US);
 		try {
 			Sequencia progressao;
 			int m = Integer.parseInt(txtSp1.getText());
@@ -140,18 +144,24 @@ public class ViewController implements Initializable {
 
 			}
 
-			int quant = 10;// quantidade de elementos a gerar
+			int quant = Integer.parseInt(txtQuant.getText());// quantidade de elementos a gerar
+			if (quant < 0) {
+				throw new IllegalArgumentException("Os valor inseridos é inválido.");
+			}
+			
 			List<String> lista = progressao.gerarListaDetalhada(quant);
 			txtLista.appendText(progressao.toString() + "\n");
 			for (String an : lista) {
 				txtLista.appendText(an + "\n");
 			}
+			
 			double soma = progressao.soma(quant);
 			txtLista.appendText("A soma dos " + quant + " elementos é " + soma + "\n");
+			
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			txtLista.appendText("O formato numérico é inválido");
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			txtLista.appendText(e.getMessage());
 		}
 	}
 
