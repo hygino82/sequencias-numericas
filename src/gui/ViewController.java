@@ -148,16 +148,17 @@ public class ViewController implements Initializable {
 			if (quant < 0) {
 				throw new IllegalArgumentException("Os valor inseridos é inválido.");
 			}
-			
+
 			List<String> lista = progressao.gerarListaDetalhada(quant);
+			txtLista.appendText("PROGRESSÃO " + opcao + "\n");
 			txtLista.appendText(progressao.toString() + "\n");
 			for (String an : lista) {
 				txtLista.appendText(an + "\n");
 			}
-			
+
 			double soma = progressao.soma(quant);
 			txtLista.appendText("A soma dos " + quant + " elementos é " + soma + "\n");
-			
+
 		} catch (NumberFormatException e) {
 			txtLista.appendText("O formato numérico é inválido");
 		} catch (IllegalArgumentException e) {
