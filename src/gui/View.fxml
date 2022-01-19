@@ -53,7 +53,7 @@
             <RadioButton fx:id="rbDoisElementos" layoutX="14.0" layoutY="60.0" mnemonicParsing="false" onAction="#getEscolha" text="DOIS ELEMENTOS" toggleGroup="$escolha" />
          </children>
       </Pane>
-      <TextArea fx:id="txtLista" layoutX="56.0" layoutY="330.0" prefHeight="200.0" prefWidth="543.0">
+      <TextArea fx:id="txtLista" layoutX="56.0" layoutY="208.0" prefHeight="322.0" prefWidth="543.0">
          <font>
             <Font size="24.0" />
          </font></TextArea>

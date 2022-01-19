@@ -1,9 +1,13 @@
 package gui;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import entities.PA;
+import entities.PG;
+import entities.Sequencia;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -104,36 +108,50 @@ public class ViewController implements Initializable {
 	@FXML
 	public void btCalculaAction() {
 		txtLista.clear();
-		int m = Integer.parseInt(txtSp1.getText());
-		double am = Double.parseDouble(txtV1.getText());
-
-		if (rbElementoRazao.isSelected()) {
-			double razao = Double.parseDouble(txtV2.getText());
-
-			if (opcao == "ARITMETICA") {
-				double a1 = am - (m - 1) * razao;
-				PA progressao = new PA(a1, razao);
-				txtLista.appendText(progressao.toString());
-				txtLista.appendText("\nOs primeiros 20 elementos são:\n");
-				for (int i = 1; i <= 20; i++) {
-					txtLista.appendText("A[" + i + "] = " + progressao.An(i) + "\n");
-				}
-			} else if (cbProgressao.getValue() == "GEOMETRICA") {
-				System.out.println("NÃO IMPLEMENTADO AINDA");
+		Locale.setDefault(Locale.US);// para usar ponto decimal
+		try {
+			Sequencia progressao;
+			int m = Integer.parseInt(txtSp1.getText());
+			double am = Double.parseDouble(txtV1.getText());
+			if (m < 0) {
+				throw new IllegalArgumentException("O índice do elemento deve ser um inteiro positivo.");
 			}
-		} else {// quando são informados dois elementos
-			int n = Integer.parseInt(txtSp2.getText());
-			double an = Double.parseDouble(txtV3.getText());
-			if (opcao == "ARITMETICA") {
-				PA progressao = new PA(an, n, am, m);
-				txtLista.appendText(progressao.toString());
-				txtLista.appendText("\nOs primeiros 20 elementos são:\n");
-				for (int i = 1; i <= 20; i++) {
-					txtLista.appendText("A[" + i + "] = " + progressao.An(i) + "\n");
+			if (rbElementoRazao.isSelected()) {
+				double razao = Double.parseDouble(txtV2.getText());
+
+				if (opcao == "ARITMETICA") {
+					double a1 = am - (m - 1) * razao;
+					progressao = new PA(a1, razao);
+				} else {
+					double a1 = am / Math.pow(razao, m - 1);
+					progressao = new PG(a1, razao);
 				}
-			} else if (cbProgressao.getValue() == "GEOMETRICA") {
-				System.out.println("NÃO IMPLEMENTADO AINDA");
+			} else {// quando são informados dois elementos
+				int n = Integer.parseInt(txtSp2.getText());
+				double an = Double.parseDouble(txtV3.getText());
+				if ((n == m) || (n < 0)) {
+					throw new IllegalArgumentException("Os valores inseridos são inválidos.");
+				}
+				if (opcao == "ARITMETICA") {
+					progressao = new PA(an, n, am, m);
+				} else {
+					progressao = new PG(an, n, am, m);
+				}
+
 			}
+
+			int quant = 10;// quantidade de elementos a gerar
+			List<String> lista = progressao.gerarListaDetalhada(quant);
+			txtLista.appendText(progressao.toString() + "\n");
+			for (String an : lista) {
+				txtLista.appendText(an + "\n");
+			}
+			double soma = progressao.soma(quant);
+			txtLista.appendText("A soma dos " + quant + " elementos é " + soma + "\n");
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 		}
 	}
 
